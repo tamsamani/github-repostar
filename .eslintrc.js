@@ -5,19 +5,21 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
+    sourceType: 'module'
   },
   extends: [
     '@nuxtjs',
     'prettier',
     'prettier/vue',
     'plugin:prettier/recommended',
-    'plugin:nuxt/recommended'
+    'plugin:nuxt/recommended',
+    'eslint-config-prettier'
   ],
-  plugins: [
-    'prettier'
-  ],
-  // add your custom rules here
+  plugins: ['prettier'],
+
   rules: {
+    // make it off beacause api comes with "_" in some cases
+    camelcase: 'off'
   }
-}
+};
