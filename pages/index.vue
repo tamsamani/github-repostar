@@ -1,52 +1,61 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        github-repostar
-      </h1>
-      <h2 class="subtitle">
-        github lattest repositories
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+    <div v-if="!loading">Loading...</div>
+    <div v-else class="p-4 md:p-0">
+      <template v-for="(repo, key) in apiData">
+        <RepoCard :key="key" :repo="repo" />
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import { mapGetters } from 'vuex';
+import RepoCard from '~/components/RepoCard';
 
 export default {
   components: {
-    Logo
+    RepoCard
+  },
+
+  data() {
+    return {
+      loading: false,
+      page: 0,
+      apiData: []
+    };
+  },
+
+  computed: {
+    ...mapGetters({
+      getPage: 'GET_PAGE'
+    })
+  },
+
+  async fetch({ store, params }) {
+    await store.dispatch('FETCH_REPOS');
+  },
+
+  updated() {
+    if (this.apiData.length / 15 < this.page) {
+      const pages = this.getPage(this.page);
+      this.apiData.concat(pages);
+    }
+  },
+
+  mounted() {
+    const pages = this.getPage(this.page);
+    if (pages) {
+      this.loading = true;
+      this.apiData = pages;
+    }
   }
-}
+};
 </script>
 
-<style>
-/* Sample `apply` at-rules with Tailwind CSS
+<style lang="postcss">
 .container {
   @apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
 .title {
@@ -60,14 +69,11 @@ export default {
 }
 
 .subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
+  @apply font-light text-4xl text-gray-700 pb-4;
   word-spacing: 5px;
-  padding-bottom: 15px;
 }
 
 .links {
-  padding-top: 15px;
+  @apply pt-4;
 }
 </style>
