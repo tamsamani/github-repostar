@@ -4,10 +4,13 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: process.env.npm_package_name || 'Github RepoStar',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1'
+      },
       {
         hid: 'description',
         name: 'description',
@@ -27,7 +30,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [{ src: '~plugins/infiniteloading', ssr: false }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -37,6 +40,10 @@ export default {
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
     '@nuxtjs/tailwindcss'
   ],
+
+  eslint: {
+    emitError: false
+  },
   /*
    ** Nuxt.js modules
    */
@@ -48,7 +55,9 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'https://api.github.com'
+  },
   /*
    ** Build configuration
    */
@@ -58,4 +67,4 @@ export default {
      */
     extend(config, ctx) {}
   }
-}
+};
