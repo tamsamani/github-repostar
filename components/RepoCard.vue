@@ -1,6 +1,6 @@
 <template>
-  <div class="repo-card">
-    <div class="mr-8">
+  <div class="repo-card p-3 md:p-6">
+    <div class="lg:w-48 md:w-32 mr-4 md:mr-8 w-24 flex-none">
       <a :href="owner.html_url" target="_blank">
         <img
           :src="owner.avatar_url"
@@ -12,16 +12,20 @@
     <div class="text-left flex-1 flex flex-col">
       <div class="flex justify-between">
         <h3 class="text-lg font-bold">
-          <a :href="html_url" target="_blank">{{ name }}</a>
+          <a :href="repo.html_url" target="_blank">{{ repo.name }}</a>
         </h3>
-        <div class="text-sm text-gray-700 flex-shrink-0">
-          Update: {{ new Date(updated_at).toLocaleDateString() }}
+        <div class="text-sm text-gray-700 flex-shrink-0 pt-1">
+          Update: {{ new Date(repo.updated_at).toLocaleDateString() }}
         </div>
       </div>
-      <p class="text-base text-gray-800 flex-grow flex-1">{{ description }}</p>
+      <div class="text-base text-gray-800 flex-grow flex-1 overflow-hidden">
+        <p class="line-clamp-5 text-justify">
+          {{ repo.description }}
+        </p>
+      </div>
       <div class="flex text-sm justify-end">
         <div>
-          submited on {{ new Date(created_at).toLocaleDateString() }} by
+          submited on {{ new Date(repo.created_at).toLocaleDateString() }} by
           <a
             :href="owner.html_url"
             class="text-bold text-blue-600 hover:text-indigo-700"
@@ -38,20 +42,20 @@
           <div class="font-light mr-4">
             {{ license ? license.key : 'None' }}
           </div>
-          <div class="font-bold">{{ language }}</div>
+          <div class="font-bold">{{ repo.language }}</div>
         </div>
         <div class="flex justify-end">
           <RepoStates>
             <span slot="left">stars</span>
-            <span slot="right">{{ stargazers_count }}</span>
+            <span slot="right">{{ repo.stargazers_count }}</span>
           </RepoStates>
           <RepoStates class="mx-2">
             <span slot="left">forks</span>
-            <span slot="right">{{ forks_count }}</span>
+            <span slot="right">{{ repo.forks_count }}</span>
           </RepoStates>
           <RepoStates>
             <span slot="left">watchs</span>
-            <span slot="right">{{ watchers_count }}</span>
+            <span slot="right">{{ repo.watchers_count }}</span>
           </RepoStates>
         </div>
       </div>
@@ -75,39 +79,15 @@ export default {
     }
   },
   data() {
-    const {
-      name,
-      description,
-      owner,
-      created_at,
-      updated_at,
-      html_url,
-      language,
-      stargazers_count,
-      watchers_count,
-      forks_count,
-      license
-    } = this.repo;
-    return {
-      name,
-      description,
-      owner,
-      created_at,
-      updated_at,
-      html_url,
-      language,
-      stargazers_count,
-      watchers_count,
-      forks_count,
-      license
-    };
+    const { owner, license } = this.repo;
+    return { owner, license };
   }
 };
 </script>
 
 <style lang="postcss">
 .repo-card {
-  @apply bg-gray-200 rounded shadow my-6 p-6 flex max-w-3xl;
+  @apply bg-gray-200 rounded shadow my-3 flex max-w-3xl;
   &:hover {
     @apply bg-gray-300;
   }
