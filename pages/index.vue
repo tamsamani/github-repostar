@@ -12,7 +12,9 @@
       </div>
       <no-ssr>
         <infinite-loading @infinite="infiniteHandler">
-          <div slot="no-more">You Have reach all repos in this period.</div>
+          <div slot="no-more" class="font-bold py-4 px-2 text-gray-600">
+            You Have reach all repos in this period.
+          </div>
         </infinite-loading>
       </no-ssr>
     </div>

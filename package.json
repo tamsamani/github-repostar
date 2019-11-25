@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"@nuxtjs/axios": "^5.3.6",
+		"@nuxtjs/moment": "^1.4.0",
 		"nuxt": "^2.0.0",
 		"vue-infinite-loading": "^2.4.4",
 		"vue-scrollto": "^2.17.1"

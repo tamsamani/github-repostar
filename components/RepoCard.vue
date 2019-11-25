@@ -15,7 +15,7 @@
           <a :href="repo.html_url" target="_blank">{{ repo.name }}</a>
         </h3>
         <div class="text-sm text-gray-700 flex-shrink-0 pt-1">
-          Update: {{ new Date(repo.updated_at).toLocaleDateString() }}
+          Update: {{ $moment(repo.updated_at).format('YYYY-MM-DD') }}
         </div>
       </div>
       <div class="text-base text-gray-800 flex-grow flex-1 overflow-hidden">
@@ -25,7 +25,11 @@
       </div>
       <div class="flex text-sm justify-end">
         <div>
-          submited on {{ new Date(repo.created_at).toLocaleDateString() }} by
+          submited on
+          <span class="font-bold">{{
+            $moment(repo.created_at).format('YYYY-MM-DD')
+          }}</span>
+          by
           <a
             :href="owner.html_url"
             class="text-bold text-blue-600 hover:text-indigo-700"
@@ -50,12 +54,12 @@
             <span slot="right">{{ repo.stargazers_count }}</span>
           </RepoStates>
           <RepoStates class="mx-2">
-            <span slot="left">forks</span>
-            <span slot="right">{{ repo.forks_count }}</span>
-          </RepoStates>
-          <RepoStates>
             <span slot="left">watchs</span>
             <span slot="right">{{ repo.watchers_count }}</span>
+          </RepoStates>
+          <RepoStates>
+            <span slot="left">forks</span>
+            <span slot="right">{{ repo.forks_count }}</span>
           </RepoStates>
         </div>
       </div>
