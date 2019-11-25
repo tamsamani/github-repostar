@@ -40,10 +40,22 @@ export default {
 
   computed: {
     ...mapGetters({
+      filterDate: 'GET_FILTER_DATE',
+      currentDate: 'GET_CURRENT_DATE',
       getPage: 'GET_PAGE',
       gettedAll: 'IS_ALL_GETTED',
       stateError: 'GET_ERROR'
     })
+  },
+
+  watch: {
+    // watch for currentpage if updated
+    filterDate() {
+      this.loading = false;
+    },
+    currentDate(oldValue, newValue) {
+      setTimeout(() => this.resetPage(), 100);
+    }
   },
 
   async fetch({ store, params }) {
@@ -54,14 +66,17 @@ export default {
   },
 
   mounted() {
-    const page = this.getPage(0);
-    if (page) {
-      this.pages = 1;
-      this.loading = true;
-      this.apiData = page;
-    }
+    this.resetPage();
   },
   methods: {
+    resetPage() {
+      const page = this.getPage(0);
+      if (page) {
+        this.pages = 1;
+        this.loading = true;
+        this.apiData = page;
+      }
+    },
     async loadMore($state) {
       // load more pages
       const page = this.getPage(this.pages);
@@ -71,6 +86,7 @@ export default {
         $state.loaded();
       } else if (!this.stateError && !this.gettedAll) {
         await this.$store.dispatch('FETCH_REPOS');
+        this.loading = true;
         $state.loaded();
       } else {
         $state.complete();

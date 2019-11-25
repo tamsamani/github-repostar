@@ -35,6 +35,8 @@ export const getters = {
     } else return null;
   },
   IS_ALL_GETTED: (state) => state.repos.length >= state.totalResults,
+  GET_CURRENT_DATE: (state) => state.currentFitchedDate,
+  GET_FILTER_DATE: (state) => state.filterDate,
   GET_ERROR: (state) => state.error
 };
 
