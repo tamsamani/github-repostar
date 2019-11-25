@@ -22,6 +22,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"@mathieustan/vue-datepicker": "^0.2.1",
 		"@nuxtjs/axios": "^5.3.6",
 		"@nuxtjs/moment": "^1.4.0",
 		"nuxt": "^2.0.0",
