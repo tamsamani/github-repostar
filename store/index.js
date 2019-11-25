@@ -1,4 +1,5 @@
 import moment from 'moment';
+import fetchQuery from '~/helpers/Query';
 
 // =================================================
 // State
@@ -80,21 +81,18 @@ export const actions = {
       // loading
       const page = state.currentPage + 1;
       try {
-        const apiData = await import('@/assets/api' + page + '.json');
-        commit('ADD_REPOS', apiData.items);
+        // const apiData = await import('@/assets/api' + page + '.json');
+        const data = (await fetchQuery(date, page)).data;
+        commit('ADD_REPOS', data.items);
       } catch (error) {
         commit('SET_ERROR', error);
       }
-      console.log('Add with new page %s in %d', page, date);
     } else {
       // this mean we have to get new data
       // loading
-      const apiData = await import('@/assets/api.json');
-      commit('SET_TOTAL', apiData.total_count);
-      commit('SET_REPOS', apiData.items); /* new Data fitched */
-      console.log('Add with new date %s', date);
+      const data = (await fetchQuery(date, 0)).data;
+      commit('SET_TOTAL', data.total_count);
+      commit('SET_REPOS', data.items); /* new Data fitched */
     }
-    // if (page) console.log('Fetch data based to %s & %s', page, date);
-    // commit('SET_REPOS', apiData.items); // append fitched pages to repos
   }
 };
