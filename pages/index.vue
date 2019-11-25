@@ -10,13 +10,13 @@
         <RepoCard :repo="repo" class="md:mx-auto md:w-full" />
         <div class="pr-3 md:pr-0"></div>
       </div>
-      <no-ssr>
-        <infinite-loading @infinite="infiniteHandler">
+      <client-only>
+        <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
           <div slot="no-more" class="font-bold py-4 px-2 text-gray-600">
             You Have reach all repos in this period.
           </div>
         </infinite-loading>
-      </no-ssr>
+      </client-only>
     </div>
   </div>
 </template>
@@ -40,7 +40,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      getPage: 'GET_PAGE'
+      getPage: 'GET_PAGE',
+      gettedAll: 'IS_ALL_GETTED',
+      stateError: 'GET_ERROR'
     })
   },
 
@@ -60,13 +62,15 @@ export default {
     }
   },
   methods: {
-    loadMore($state) {
+    async loadMore($state) {
       // load more pages
       const page = this.getPage(this.pages);
       if (page) {
         this.apiData = this.apiData.concat(page);
-
         this.pages++;
+        $state.loaded();
+      } else if (!this.stateError && !this.gettedAll) {
+        await this.$store.dispatch('FETCH_REPOS');
         $state.loaded();
       } else {
         $state.complete();
