@@ -1,10 +1,18 @@
 <template>
-  <div class="container">
-    <div v-if="!loading">Loading...</div>
-    <div v-else class="p-4 md:p-0">
-      <template v-for="(repo, key) in apiData">
-        <RepoCard :key="key" :repo="repo" />
-      </template>
+  <div>
+    <Header></Header>
+    <div class="page container">
+      <div v-if="!loading">Loading...</div>
+      <div v-else class="w-full">
+        <div
+          v-for="(repo, key) in apiData"
+          :key="key"
+          class="flex overflow-auto px-3 md:block"
+        >
+          <RepoCard :repo="repo" class="md:mx-auto md:w-full" />
+          <div class="pr-3 md:pr-0"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -12,10 +20,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import RepoCard from '~/components/RepoCard';
+import Header from '~/components/Header';
 
 export default {
   components: {
-    RepoCard
+    RepoCard,
+    Header
   },
 
   data() {
