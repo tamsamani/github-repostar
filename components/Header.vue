@@ -5,7 +5,7 @@
         Github Repostar
       </div>
       <div>
-        <slote />
+        <slot />
       </div>
     </div>
   </header>
