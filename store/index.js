@@ -5,7 +5,6 @@
 // =================================================
 export const state = () => {
   const initState = {
-    pages: 0,
     // how much repos in page
     pageSize: 15,
     gitRequestSize: 100,
@@ -19,8 +18,10 @@ export const state = () => {
 // Getters
 // =================================================
 export const getters = {
+  pages: (state) => Math.ceil(state.repos.length / state.pageSize),
   GET_PAGE: (state) => (page) => {
-    if (page <= state.pages) {
+    const pages = getters.pages(state);
+    if (page < pages) {
       return state.repos.slice(15 * page, 15 * (page + 1));
     } else return null;
   }
@@ -32,11 +33,8 @@ export const getters = {
 export const mutations = {
   SET_REPOS: (state, repos) => {
     // set new array of repos repos
+    console.log('set repos', repos.length);
     state.repos = [...state.repos, ...repos];
-  },
-  CALC_PAGES: (state) => {
-    // calculate pages based to pageSize
-    state.pages = Math.ceil(state.repos.length / state.pageSize);
   }
 };
 
@@ -47,6 +45,5 @@ export const actions = {
   async FETCH_REPOS({ commit, state }) {
     const apiData = await import('@/assets/api.json');
     commit('SET_REPOS', apiData.items); // append fitched pages to repos
-    commit('CALC_PAGES'); // after set new repos we should recalculate number of pages
   }
 };
