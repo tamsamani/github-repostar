@@ -1,6 +1,15 @@
 <template>
   <div>
-    <Header></Header>
+    <Header id="page-top"></Header>
+    <div class="fixed bottom-0 right-0 p-4">
+      <div
+        v-scroll-to="'#page-top'"
+        v-show="scroll > 2000"
+        class="cursor-pointer px-2 py-1 select-none font-bold border-gray-500 rounded bg-green-700 text-gray-100 transition"
+      >
+        Scroll Top
+      </div>
+    </div>
     <div class="page container">
       <div v-if="!loading">Loading...</div>
       <div v-else class="w-full">
@@ -12,6 +21,11 @@
           <RepoCard :repo="repo" class="md:mx-auto md:w-full" />
           <div class="pr-3 md:pr-0"></div>
         </div>
+        <no-ssr>
+          <infinite-loading @infinite="infiniteHandler">
+            <div slot="no-more">You Have reach all repos in this period.</div>
+          </infinite-loading>
+        </no-ssr>
       </div>
     </div>
   </div>
@@ -30,8 +44,9 @@ export default {
 
   data() {
     return {
+      scroll: 0,
       loading: false,
-      page: 0,
+      pages: 0,
       apiData: []
     };
   },
@@ -45,19 +60,46 @@ export default {
   async fetch({ store, params }) {
     await store.dispatch('FETCH_REPOS');
   },
-
   updated() {
-    if (this.apiData.length / 15 < this.page) {
-      const pages = this.getPage(this.page);
-      this.apiData.concat(pages);
+    console.log('Update', this.pages, this.apiData);
+  },
+  destroyed() {
+    if (process.browser) {
+      window.removeEventListener('scroll', this.handleScroll);
     }
   },
-
   mounted() {
-    const pages = this.getPage(this.page);
-    if (pages) {
+    const page = this.getPage(0);
+    if (page) {
+      this.pages = 1;
       this.loading = true;
-      this.apiData = pages;
+      this.apiData = page;
+    }
+    if (process.browser) {
+      window.addEventListener('scroll', this.handleScroll);
+    }
+  },
+  methods: {
+    handleScroll() {
+      this.scroll = window.scrollY;
+    },
+    loadMore($state) {
+      // load more pages
+      const page = this.getPage(this.pages);
+      if (page) {
+        this.apiData = this.apiData.concat(page);
+
+        this.pages++;
+        $state.loaded();
+      } else {
+        $state.complete();
+      }
+    },
+    infiniteHandler($state) {
+      setTimeout(() => {
+        this.loadMore($state);
+      }, 1000);
+      // $state.complete();
     }
   }
 };
