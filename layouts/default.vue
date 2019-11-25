@@ -1,11 +1,48 @@
 <template>
   <div>
+    <Header id="page-top"></Header>
+    <div class="fixed bottom-0 right-0 p-4">
+      <div
+        v-scroll-to="'#page-top'"
+        v-show="scroll > 2000"
+        class="cursor-pointer px-2 py-1 select-none font-bold border-gray-500 rounded bg-green-700 text-gray-100 transition"
+      >
+        Scroll Top
+      </div>
+    </div>
     <nuxt />
   </div>
 </template>
 
 <script>
-export default {};
+import Header from '~/components/Header';
+export default {
+  components: {
+    Header
+  },
+  data() {
+    return {
+      scroll: 0
+    };
+  },
+  destroyed() {
+    // to unbinding scrolling state
+    if (process.browser) {
+      window.removeEventListener('scroll', this.handleScroll);
+    }
+  },
+  mounted() {
+    // for check scrolling state
+    if (process.browser) {
+      window.addEventListener('scroll', this.handleScroll);
+    }
+  },
+  methods: {
+    handleScroll() {
+      this.scroll = window.scrollY;
+    }
+  }
+};
 </script>
 
 <style>

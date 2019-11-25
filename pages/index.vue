@@ -1,32 +1,20 @@
 <template>
-  <div>
-    <Header id="page-top"></Header>
-    <div class="fixed bottom-0 right-0 p-4">
+  <div class="page container">
+    <div v-if="!loading">Loading...</div>
+    <div v-else class="w-full">
       <div
-        v-scroll-to="'#page-top'"
-        v-show="scroll > 2000"
-        class="cursor-pointer px-2 py-1 select-none font-bold border-gray-500 rounded bg-green-700 text-gray-100 transition"
+        v-for="(repo, key) in apiData"
+        :key="key"
+        class="flex overflow-auto px-3 md:block"
       >
-        Scroll Top
+        <RepoCard :repo="repo" class="md:mx-auto md:w-full" />
+        <div class="pr-3 md:pr-0"></div>
       </div>
-    </div>
-    <div class="page container">
-      <div v-if="!loading">Loading...</div>
-      <div v-else class="w-full">
-        <div
-          v-for="(repo, key) in apiData"
-          :key="key"
-          class="flex overflow-auto px-3 md:block"
-        >
-          <RepoCard :repo="repo" class="md:mx-auto md:w-full" />
-          <div class="pr-3 md:pr-0"></div>
-        </div>
-        <no-ssr>
-          <infinite-loading @infinite="infiniteHandler">
-            <div slot="no-more">You Have reach all repos in this period.</div>
-          </infinite-loading>
-        </no-ssr>
-      </div>
+      <no-ssr>
+        <infinite-loading @infinite="infiniteHandler">
+          <div slot="no-more">You Have reach all repos in this period.</div>
+        </infinite-loading>
+      </no-ssr>
     </div>
   </div>
 </template>
@@ -34,17 +22,14 @@
 <script>
 import { mapGetters } from 'vuex';
 import RepoCard from '~/components/RepoCard';
-import Header from '~/components/Header';
 
 export default {
   components: {
-    RepoCard,
-    Header
+    RepoCard
   },
 
   data() {
     return {
-      scroll: 0,
       loading: false,
       pages: 0,
       apiData: []
@@ -61,13 +46,9 @@ export default {
     await store.dispatch('FETCH_REPOS');
   },
   updated() {
-    console.log('Update', this.pages, this.apiData);
+    // console.log('Update', this.pages, this.apiData);
   },
-  destroyed() {
-    if (process.browser) {
-      window.removeEventListener('scroll', this.handleScroll);
-    }
-  },
+
   mounted() {
     const page = this.getPage(0);
     if (page) {
@@ -75,14 +56,8 @@ export default {
       this.loading = true;
       this.apiData = page;
     }
-    if (process.browser) {
-      window.addEventListener('scroll', this.handleScroll);
-    }
   },
   methods: {
-    handleScroll() {
-      this.scroll = window.scrollY;
-    },
     loadMore($state) {
       // load more pages
       const page = this.getPage(this.pages);
