@@ -5,9 +5,9 @@
       <div
         v-scroll-to="'#page-top'"
         v-show="scroll > 2000"
-        class="cursor-pointer px-2 py-1 select-none font-bold border-gray-500 rounded bg-green-700 text-gray-100 transition"
+        class="bg-green-700 border-gray-500 cursor-pointer p-2 rounded-full shadow text-gray-100"
       >
-        Scroll Top
+        <mdiArrowUpBoldCircle />
       </div>
     </div>
     <nuxt />
@@ -15,10 +15,13 @@
 </template>
 
 <script>
+import mdiArrowUpBoldCircle from 'mdi-vue/ArrowUpBoldCircle';
 import Header from '~/components/Header';
+
 export default {
   components: {
-    Header
+    Header,
+    mdiArrowUpBoldCircle
   },
   data() {
     return {
