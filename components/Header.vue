@@ -18,8 +18,9 @@
           origin="-50px 0px"
         >
           <template #activator>
-            <div class="font-bold text-lg">
-              {{ date }}
+            <div class="font-bold flex items-center text-lg">
+              <mdi-calendar-arrow-right width="20" />
+              <span class="ml-1">{{ date }}</span>
             </div>
           </template>
         </VueDatePicker>
@@ -29,7 +30,11 @@
 </template>
 
 <script>
+import mdiCalendarArrowRight from 'mdi-vue/CalendarArrowRight';
 export default {
+  components: {
+    mdiCalendarArrowRight
+  },
   data() {
     return {
       date: this.$store.state.filterDate

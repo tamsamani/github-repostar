@@ -40,25 +40,31 @@
       </div>
       <div class="flex justify-between flex-wrap">
         <div class="flex">
-          <div class="font-light mr-4">
-            {{ repo.private ? 'private' : 'public' }}
+          <div
+            :title="repo.private ? 'Private' : 'Public'"
+            class="flex font-light mr-3"
+          >
+            <mdiLock v-if="repo.private" />
+            <mdiEarth v-else />
           </div>
-          <div class="font-light mr-4">
+          <div class="font-light mr-3" title="license">
             {{ license ? license.key : 'None' }}
           </div>
-          <div class="font-bold">{{ repo.language }}</div>
+          <div class="font-bold" title="most used programing language">
+            {{ repo.language }}
+          </div>
         </div>
         <div class="flex justify-end">
           <RepoStates>
-            <span slot="left">stars</span>
+            <span slot="left"><mdiStar /></span>
             <span slot="right">{{ repo.stargazers_count }}</span>
           </RepoStates>
           <RepoStates class="mx-2">
-            <span slot="left">watchs</span>
+            <span slot="left"><mdiEyeOutline /></span>
             <span slot="right">{{ repo.watchers_count }}</span>
           </RepoStates>
           <RepoStates>
-            <span slot="left">forks</span>
+            <span slot="left"><mdiSourceFork /></span>
             <span slot="right">{{ repo.forks_count }}</span>
           </RepoStates>
         </div>
@@ -68,9 +74,21 @@
 </template>
 
 <script>
+import mdiEyeOutline from 'mdi-vue/EyeOutline';
+import mdiSourceFork from 'mdi-vue/SourceFork';
+import mdiStar from 'mdi-vue/Star';
+import mdiEarth from 'mdi-vue/Earth';
+import mdiLock from 'mdi-vue/Lock';
+
 import RepoStates from './RepoStates';
+
 export default {
   components: {
+    mdiEyeOutline,
+    mdiSourceFork,
+    mdiStar,
+    mdiEarth,
+    mdiLock,
     RepoStates
   },
   props: {
